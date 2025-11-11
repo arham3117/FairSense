@@ -96,8 +96,8 @@ Course: Introduction to Safety of AI"
 
 ### Step 5: Connect and Push
 ```bash
-# Add your GitHub username in the URL below
-git remote add origin https://github.com/YOUR_USERNAME/FairSense.git
+# Add remote with your repository URL
+git remote add origin https://github.com/arham3117/FairSense.git
 
 # Rename branch to main (if needed)
 git branch -M main

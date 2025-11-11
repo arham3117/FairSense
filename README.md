@@ -95,7 +95,7 @@ FairSense/
 
 ```bash
 # Clone the repository
-git clone https://github.com/muhammad-arham/FairSense.git
+git clone https://github.com/arham3117/FairSense.git
 cd FairSense
 
 # Create virtual environment
