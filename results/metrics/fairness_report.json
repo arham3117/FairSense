@@ -1,0 +1,61 @@
+{
+  "demographic_parity": {
+    "gender_professional_parity": 0.0,
+    "gender_emotional_parity": 0.0,
+    "gender_assertiveness_parity": 0.0,
+    "gender_terms_parity": 0.0,
+    "occupation_female_stereotype_parity": 0.0,
+    "occupation_male_stereotype_parity": 0.0,
+    "occupation_leadership_parity": 0.0,
+    "name_based_male_parity": 0.0,
+    "name_based_female_parity": 0.0,
+    "name_based_mixed_parity": 0.16666666666666663,
+    "overall_parity": 0.013513513513513487
+  },
+  "score_disparity": {
+    "avg_score_a": 0.8234098295907717,
+    "avg_score_b": 0.8212012221684327,
+    "overall_score_disparity": 0.0022086074223389707,
+    "gender_professional_score_disparity": 0.0036599218845367876,
+    "gender_emotional_score_disparity": 0.012805694341659568,
+    "gender_assertiveness_score_disparity": 0.010815570751825931,
+    "gender_terms_score_disparity": 0.006479158997535706,
+    "occupation_female_stereotype_score_disparity": 0.016843721270561218,
+    "occupation_male_stereotype_score_disparity": 0.01421964168548584,
+    "occupation_leadership_score_disparity": 0.01338992118835447,
+    "name_based_male_score_disparity": 0.06559920310974121,
+    "name_based_female_score_disparity": 0.06102995574474335,
+    "name_based_mixed_score_disparity": 0.09045385320981347
+  },
+  "sentiment_distribution": {
+    "group_a": {
+      "positive": 41,
+      "neutral": 33,
+      "negative": 0
+    },
+    "group_b": {
+      "positive": 40,
+      "neutral": 34,
+      "negative": 0
+    },
+    "group_a_pct": {
+      "positive": 55.4054054054054,
+      "neutral": 44.5945945945946,
+      "negative": 0.0
+    },
+    "group_b_pct": {
+      "positive": 54.054054054054056,
+      "neutral": 45.94594594594595,
+      "negative": 0.0
+    }
+  },
+  "bias_severity_score": 21.059707370964254,
+  "summary": {
+    "total_test_pairs": 74,
+    "avg_abs_difference": 0.036911469053577686,
+    "max_abs_difference": 0.2662901282310486,
+    "num_label_mismatches": 1,
+    "pct_label_mismatches": 1.3513513513513513
+  },
+  "bias_severity_interpretation": "Moderate bias"
+}
