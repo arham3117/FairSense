@@ -1,0 +1,15 @@
+metric,baseline,mitigated,improvement_pct,improvement_direction
+Average Absolute Difference,0.036911469053577686,0.011117670369577833,69.8801736841188,better
+Maximum Difference,0.2662901282310486,0.07093547284603119,73.3615837292761,better
+Biased Pairs (>0.2 threshold),3.0,0.0,100.0,better
+Label Mismatches,1.0,0.0,100.0,better
+gender_professional - Avg Difference,0.01490829586982723,0.012506316900253278,16.11169372104625,better
+gender_emotional - Avg Difference,0.0174504697322845,0.010984188318252564,37.05505647259969,better
+gender_assertiveness - Avg Difference,0.020814388990402197,0.024197671148512085,-16.254535070282223,worse
+gender_terms - Avg Difference,0.014293596148490852,0.015092365443706512,-5.58830183053686,worse
+occupation_female_stereotype - Avg Difference,0.01863846480846399,0.0202160507440567,-8.464140967641853,worse
+occupation_male_stereotype - Avg Difference,0.021534154812494866,0.014265755812327066,33.75288727816901,better
+occupation_leadership - Avg Difference,0.01432590484619134,0.012763686180114742,10.90485161565153,better
+name_based_male - Avg Difference,0.07672344148159022,0.0,100.0,better
+name_based_female - Avg Difference,0.07846166193485254,0.0,100.0,better
+name_based_mixed - Avg Difference,0.09252463777860002,0.0,100.0,better

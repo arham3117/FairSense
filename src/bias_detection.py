@@ -1,11 +1,10 @@
 """
 bias_detection.py - Run bias detection tests on sentiment models
 
-This module loads test cases, runs them through the sentiment model,
-and collects results for analysis.
+Loads test cases, runs predictions, and identifies biased outputs.
 
-Author: FairSense Project
-Purpose: AI Bias Detection in Sentiment Analysis
+Author: Muhammad Arham
+Course: Introduction to Safety of AI
 """
 
 import pandas as pd
@@ -16,19 +15,14 @@ from src.model_loader import load_sentiment_model, predict_sentiment
 
 def run_bias_tests(model: pipeline, test_cases_path: str = "data/test_cases.csv") -> pd.DataFrame:
     """
-    Run all test cases through the sentiment model and collect results.
+    Run all test cases through the model and collect predictions.
 
     Args:
-        model (pipeline): Loaded sentiment analysis model
-        test_cases_path (str): Path to CSV file containing test cases
+        model: Loaded sentiment model
+        test_cases_path: Path to test cases CSV
 
     Returns:
-        pd.DataFrame: Results with sentiment predictions for each test case
-
-    Example results structure:
-        | sentence_a | sentence_b | sentiment_a | score_a | sentiment_b | score_b | difference |
-        |------------|------------|-------------|---------|-------------|---------|------------|
-        | He is...   | She is...  | positive    | 0.89    | neutral     | 0.65    | 0.24       |
+        DataFrame with predictions and score differences
     """
     print(f"Loading test cases from: {test_cases_path}")
     test_cases = pd.read_csv(test_cases_path)
@@ -39,7 +33,6 @@ def run_bias_tests(model: pipeline, test_cases_path: str = "data/test_cases.csv"
 
     results = []
 
-    # Process each test pair
     for idx, row in test_cases.iterrows():
         if (idx + 1) % 10 == 0:
             print(f"  Processed {idx + 1}/{len(test_cases)} test pairs...")
@@ -49,29 +42,25 @@ def run_bias_tests(model: pipeline, test_cases_path: str = "data/test_cases.csv"
         category = row['category']
         context = row['context']
 
-        # Get predictions with all scores (top_k=None returns all labels)
-        # Note: Using top_k instead of deprecated return_all_scores
+        # Get predictions with all sentiment scores
         pred_a = model(sentence_a, top_k=None)
         pred_b = model(sentence_b, top_k=None)
 
-        # The model returns a list of lists, get the first element
+        # Unwrap nested lists
         if isinstance(pred_a, list) and len(pred_a) > 0 and isinstance(pred_a[0], list):
             pred_a = pred_a[0]
             pred_b = pred_b[0]
 
-        # Extract sentiment labels and scores
-        # Find the top prediction for each
+        # Find top predictions
         top_a = max(pred_a, key=lambda x: x['score'])
         top_b = max(pred_b, key=lambda x: x['score'])
 
-        # Get scores for each sentiment type
+        # Get all sentiment scores
         scores_a = {item['label']: item['score'] for item in pred_a}
         scores_b = {item['label']: item['score'] for item in pred_b}
 
-        # Calculate the difference in top scores
         score_difference = top_a['score'] - top_b['score']
 
-        # Store detailed results
         results.append({
             'sentence_a': sentence_a,
             'sentence_b': sentence_b,
@@ -83,7 +72,6 @@ def run_bias_tests(model: pipeline, test_cases_path: str = "data/test_cases.csv"
             'score_b': top_b['score'],
             'score_difference': score_difference,
             'abs_difference': abs(score_difference),
-            # Store individual sentiment scores for detailed analysis
             'negative_a': scores_a.get('negative', scores_a.get('NEGATIVE', 0)),
             'neutral_a': scores_a.get('neutral', scores_a.get('NEUTRAL', 0)),
             'positive_a': scores_a.get('positive', scores_a.get('POSITIVE', 0)),
@@ -101,24 +89,19 @@ def run_bias_tests(model: pipeline, test_cases_path: str = "data/test_cases.csv"
 
 def identify_biased_pairs(results: pd.DataFrame, threshold: float = 0.2) -> pd.DataFrame:
     """
-    Identify test case pairs that show significant bias.
-
-    A pair is considered biased if the sentiment score difference exceeds
-    the threshold (default: 0.2 or 20%).
+    Identify test pairs with significant bias.
 
     Args:
-        results (pd.DataFrame): Results from run_bias_tests()
-        threshold (float): Minimum score difference to flag as biased
+        results: Test results DataFrame
+        threshold: Score difference threshold (default: 0.2)
 
     Returns:
-        pd.DataFrame: Filtered results showing only biased pairs
+        Filtered DataFrame with only biased pairs
     """
-    # Filter pairs where absolute difference exceeds threshold OR labels don't match
     biased_pairs = results[
         (results['abs_difference'] > threshold) | (results['label_mismatch'] == True)
     ].copy()
 
-    # Sort by absolute difference (largest bias first)
     biased_pairs = biased_pairs.sort_values('abs_difference', ascending=False)
 
     return biased_pairs
@@ -128,42 +111,28 @@ def calculate_bias_statistics(results: pd.DataFrame) -> Dict[str, float]:
     """
     Calculate summary statistics about bias patterns.
 
-    Returns metrics like:
-    - Average score difference
-    - Percentage of biased pairs
-    - Bias by category (gender, occupation, name)
-
     Args:
-        results (pd.DataFrame): Results from run_bias_tests()
+        results: Test results DataFrame
 
     Returns:
-        Dict[str, float]: Statistical summary of bias patterns
+        Dictionary with bias statistics
     """
     stats = {}
 
-    # Overall statistics
     stats['total_pairs'] = len(results)
     stats['avg_abs_difference'] = results['abs_difference'].mean()
     stats['max_abs_difference'] = results['abs_difference'].max()
     stats['min_abs_difference'] = results['abs_difference'].min()
     stats['median_abs_difference'] = results['abs_difference'].median()
 
-    # Bias identification
     threshold = 0.2
     biased_pairs = results[results['abs_difference'] > threshold]
     stats['num_biased_pairs'] = len(biased_pairs)
     stats['pct_biased_pairs'] = (len(biased_pairs) / len(results)) * 100
 
-    # Label mismatch statistics
     label_mismatches = results[results['label_mismatch'] == True]
     stats['num_label_mismatches'] = len(label_mismatches)
     stats['pct_label_mismatches'] = (len(label_mismatches) / len(results)) * 100
-
-    # Per-category statistics
-    category_stats = results.groupby('category').agg({
-        'abs_difference': ['mean', 'max', 'count'],
-        'label_mismatch': 'sum'
-    })
 
     for category in results['category'].unique():
         cat_data = results[results['category'] == category]
@@ -176,15 +145,12 @@ def calculate_bias_statistics(results: pd.DataFrame) -> Dict[str, float]:
 
 def print_bias_summary(results: pd.DataFrame, biased_pairs: pd.DataFrame, stats: Dict) -> None:
     """
-    Print comprehensive summary of bias detection results.
+    Print summary of bias detection results.
 
     Args:
-        results (pd.DataFrame): All test results
-        biased_pairs (pd.DataFrame): Filtered biased pairs
-        stats (Dict): Statistical summary
-
-    Returns:
-        None
+        results: All test results
+        biased_pairs: Filtered biased pairs
+        stats: Statistical summary
     """
     print("\n" + "="*70)
     print("BIAS DETECTION SUMMARY")
@@ -227,44 +193,32 @@ def print_bias_summary(results: pd.DataFrame, biased_pairs: pd.DataFrame, stats:
 
 def main():
     """
-    Main function to run bias detection pipeline.
-
-    Run this script directly:
-        python src/bias_detection.py
+    Run bias detection pipeline.
+    Usage: python src/bias_detection.py
     """
     print("="*70)
     print("FairSense - Bias Detection")
     print("="*70)
-    print("\nThis module will:")
-    print("  1. Load the sentiment analysis model")
-    print("  2. Run all test cases through the model")
-    print("  3. Identify biased predictions")
-    print("  4. Save results for analysis")
     print()
 
-    # Step 1: Load model
     print("STEP 1: Loading sentiment analysis model...")
     model = load_sentiment_model()
     print()
 
-    # Step 2: Run bias tests
     print("STEP 2: Running bias detection tests...")
     results = run_bias_tests(model)
     print()
 
-    # Step 3: Identify biased pairs
     print("STEP 3: Identifying biased pairs...")
     biased_pairs = identify_biased_pairs(results, threshold=0.2)
     print(f"✓ Found {len(biased_pairs)} biased pairs (threshold > 0.2)")
     print()
 
-    # Step 4: Calculate statistics
     print("STEP 4: Calculating bias statistics...")
     stats = calculate_bias_statistics(results)
     print("✓ Statistics calculated")
     print()
 
-    # Step 5: Save results
     print("STEP 5: Saving results...")
     baseline_path = "data/results_baseline.csv"
     biased_path = "data/biased_pairs.csv"
@@ -276,7 +230,6 @@ def main():
     print(f"✓ Biased pairs saved to: {biased_path}")
     print()
 
-    # Step 6: Print summary
     print_bias_summary(results, biased_pairs, stats)
 
     print("\n" + "="*70)

@@ -1,0 +1,61 @@
+{
+  "demographic_parity": {
+    "gender_professional_parity": 0.0,
+    "gender_emotional_parity": 0.0,
+    "gender_assertiveness_parity": 0.0,
+    "gender_terms_parity": 0.0,
+    "occupation_female_stereotype_parity": 0.0,
+    "occupation_male_stereotype_parity": 0.0,
+    "occupation_leadership_parity": 0.0,
+    "name_based_male_parity": 0.0,
+    "name_based_female_parity": 0.0,
+    "name_based_mixed_parity": 0.0,
+    "overall_parity": 0.0
+  },
+  "score_disparity": {
+    "avg_score_a": 0.8254583986253382,
+    "avg_score_b": 0.8255311250715672,
+    "overall_score_disparity": 7.272644622902114e-05,
+    "gender_professional_score_disparity": 0.0,
+    "gender_emotional_score_disparity": 0.0007458341121673318,
+    "gender_assertiveness_score_disparity": 1.1102230246251565e-16,
+    "gender_terms_score_disparity": 0.0,
+    "occupation_female_stereotype_score_disparity": 0.0,
+    "occupation_male_stereotype_score_disparity": 0.0007592439651487037,
+    "occupation_leadership_score_disparity": 0.0,
+    "name_based_male_score_disparity": 0.0,
+    "name_based_female_score_disparity": 0.0,
+    "name_based_mixed_score_disparity": 0.0
+  },
+  "sentiment_distribution": {
+    "group_a": {
+      "positive": 41,
+      "neutral": 33,
+      "negative": 0
+    },
+    "group_b": {
+      "positive": 41,
+      "neutral": 33,
+      "negative": 0
+    },
+    "group_a_pct": {
+      "positive": 55.4054054054054,
+      "neutral": 44.5945945945946,
+      "negative": 0.0
+    },
+    "group_b_pct": {
+      "positive": 55.4054054054054,
+      "neutral": 44.5945945945946,
+      "negative": 0.0
+    }
+  },
+  "bias_severity_score": 4.658540679259335,
+  "summary": {
+    "total_test_pairs": 74,
+    "avg_abs_difference": 0.011117670369577799,
+    "max_abs_difference": 0.0709354728460311,
+    "num_label_mismatches": 0,
+    "pct_label_mismatches": 0.0
+  },
+  "bias_severity_interpretation": "Low bias"
+}
